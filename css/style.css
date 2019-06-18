@@ -45,11 +45,6 @@ main > :nth-child(3){
   width: 50%;
 }
 
-main ul, main li {
-  padding: 0;
-  margin: 10px 0;
-}
-
 /* img {
   max-height: 300px;
   max-width: 100%;
@@ -86,4 +81,9 @@ section div {
 img{
   height:200px;
   width: 200px;
+}
+#image-clicks
+ li{
+  display: inline-block;
+  margin-left: 10px;
 }
