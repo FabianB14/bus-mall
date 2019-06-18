@@ -50,25 +50,25 @@ var ImageObject = function(name,imageSrc){
   this.timeShown = 0;
   ImageObject.allImages.push(this);
 };
-
 ImageObject.allImages = [];
 ImageObject.previousImages = [];
-
+//This fuction will reneder the images while checking for dups
 var renderImages = function(leftIndex,middleIndex,rightIndex){
+  console.log(leftIndex,middleIndex,rightIndex);
   leftImageTag.src = ImageObject.allImages[leftIndex].url;
   middleImageTag.src = ImageObject.allImages[middleIndex].url;
   rightImageTag.src = ImageObject.allImages[rightIndex].url;
   if(ImageObject.previousImages.includes(ImageObject.allImages[leftIndex].name) || ImageObject.previousImages.includes(ImageObject.allImages[middleIndex].name) ||ImageObject.previousImages.includes(ImageObject.allImages[rightIndex].name)){
     console.log('Im here!');
-    leftIndex = Math.round(Math.random()*ImageObject.allImages.length-1);
-    middleIndex = Math.round(Math.random()*ImageObject.allImages.length-1);
-    rightIndex = Math.round(Math.random()*ImageObject.allImages.length-1);
+    leftIndex = Math.floor(Math.random()*ImageObject.allImages.length);
+    middleIndex = Math.floor(Math.random()*ImageObject.allImages.length);
+    rightIndex = Math.floor(Math.random()*ImageObject.allImages.length);
     renderImages(leftIndex,middleIndex,rightIndex);
   }
   if(leftIndex === middleIndex || leftIndex === rightIndex || middleIndex === rightIndex){
-    leftIndex = Math.round(Math.random()*ImageObject.allImages.length-1);
-    middleIndex = Math.round(Math.random()*ImageObject.allImages.length-1);
-    rightIndex = Math.round(Math.random()*ImageObject.allImages.length-1);
+    leftIndex = Math.floor(Math.random()*ImageObject.allImages.length);
+    middleIndex = Math.floor(Math.random()*ImageObject.allImages.length);
+    rightIndex = Math.floor(Math.random()*ImageObject.allImages.length);
     renderImages(leftIndex,middleIndex,rightIndex);
   }
   ImageObject.previousImages = [];
@@ -76,11 +76,11 @@ var renderImages = function(leftIndex,middleIndex,rightIndex){
 };
 
 var clickNewImages = function(){
-  var leftIndex = Math.round(Math.random()*ImageObject.allImages.length-1);
+  var leftIndex = Math.floor(Math.random()*(ImageObject.allImages.length));
 
   do{
-    var middleIndex = Math.round(Math.random()*ImageObject.allImages.length-1);
-    var rightIndex = Math.round(Math.random()*ImageObject.allImages.length-1);
+    var middleIndex = Math.floor(Math.random()*(ImageObject.allImages.length));
+    var rightIndex = Math.floor(Math.random()*(ImageObject.allImages.length));
   }while(rightIndex === middleIndex || rightIndex === leftIndex || leftIndex === middleIndex);
   leftImageOnPage = ImageObject.allImages[leftIndex];
   middleImageOnPage = ImageObject.allImages[middleIndex];
