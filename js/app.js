@@ -43,39 +43,59 @@ var middleImageOnPage;
 var rightImageOnPage;
 
 //This is where the image object constructor will be
-var ImageObjet = function(name,imageSrc){
+var ImageObject = function(name,imageSrc){
   this.name = name;
   this.url = imageSrc;
   this.clicks = 0;
   this.timeShown = 0;
-
-  ImageObjet.allImages.push(this);
+  ImageObject.allImages.push(this);
 };
 
-ImageObjet.allImages = [];
+ImageObject.allImages = [];
+ImageObject.previousImages = [];
 
 var renderImages = function(leftIndex,middleIndex,rightIndex){
-  leftImageTag.src = ImageObjet.allImages[leftIndex].url;
-  middleImageTag.src = ImageObjet.allImages[middleIndex].url;
-  rightImageTag.src = ImageObjet.allImages[rightIndex].url;
+  leftImageTag.src = ImageObject.allImages[leftIndex].url;
+  middleImageTag.src = ImageObject.allImages[middleIndex].url;
+  rightImageTag.src = ImageObject.allImages[rightIndex].url;
+  if(ImageObject.previousImages.includes(ImageObject.allImages[leftIndex].name) || ImageObject.previousImages.includes(ImageObject.allImages[middleIndex].name) ||ImageObject.previousImages.includes(ImageObject.allImages[rightIndex].name)){
+    console.log('Im here!');
+    leftIndex = Math.round(Math.random()*ImageObject.allImages.length-1);
+    middleIndex = Math.round(Math.random()*ImageObject.allImages.length-1);
+    rightIndex = Math.round(Math.random()*ImageObject.allImages.length-1);
+    renderImages(leftIndex,middleIndex,rightIndex);
+  }
+  if(leftIndex === middleIndex || leftIndex === rightIndex || middleIndex === rightIndex){
+    leftIndex = Math.round(Math.random()*ImageObject.allImages.length-1);
+    middleIndex = Math.round(Math.random()*ImageObject.allImages.length-1);
+    rightIndex = Math.round(Math.random()*ImageObject.allImages.length-1);
+    renderImages(leftIndex,middleIndex,rightIndex);
+  }
+  ImageObject.previousImages = [];
+  ImageObject.previousImages.push(ImageObject.allImages[leftIndex].name,ImageObject.allImages[middleIndex].name,ImageObject.allImages[rightIndex].name);
 };
 
 var clickNewImages = function(){
-  var leftIndex = Math.round(Math.random()*ImageObjet.allImages.length);
+  var leftIndex = Math.round(Math.random()*ImageObject.allImages.length-1);
+
   do{
-    var middleIndex = Math.round(Math.random()*ImageObjet.allImages.length);
-    var rightIndex = Math.round(Math.random()*ImageObjet.allImages.length);
+    var middleIndex = Math.round(Math.random()*ImageObject.allImages.length-1);
+    var rightIndex = Math.round(Math.random()*ImageObject.allImages.length-1);
   }while(rightIndex === middleIndex || rightIndex === leftIndex || leftIndex === middleIndex);
+  leftImageOnPage = ImageObject.allImages[leftIndex];
+  middleImageOnPage = ImageObject.allImages[middleIndex];
+  rightImageOnPage = ImageObject.allImages[rightIndex];
 
-  leftImageOnPage = ImageObjet.allImages[leftIndex];
-  middleImageOnPage = ImageObjet.allImages[middleIndex];
-  rightImageOnPage = ImageObjet.allImages[rightIndex];
+  if(leftIndex === middleIndex || leftIndex === rightIndex || middleIndex === rightIndex){
+    clickNewImages();
+  }
 
+  calculation(leftImageOnPage,middleImageOnPage,rightImageOnPage);
   renderImages(leftIndex,middleIndex,rightIndex);
 };
 
 var handleClickOnImages = function(event){
-  if(globalClickCount < 26){
+  if(globalClickCount < 25){
     var imageClicked = event.target;
     var id = imageClicked.id;
 
@@ -105,34 +125,50 @@ var handleClickOnImages = function(event){
   }
 };
 
+var calculation = function(leftImageOnPage,middleImageOnPage,rightImageOnPage){
+  ImageObject.previousImages.push(leftImageCalculation,middleImageOnPage,rightImageOnPage);
+
+  var leftImageCalculation = leftImageOnPage.clicks / leftImageOnPage.timeShown;
+  var middleImageCalcuation = middleImageOnPage.clicks / middleImageOnPage.timeShown;
+  var rightImageCalcualtion = rightImageOnPage.clicks / rightImageOnPage.timeShown;
+
+  console.log(leftImageCalculation);
+  console.log(rightImageCalcualtion);
+  console.log(middleImageCalcuation);
+
+  return[leftImageCalculation,middleImageCalcuation,rightImageCalcualtion];
+};
+
+
 
 allImageTag.addEventListener('click', handleClickOnImages);
 
-new ImageObjet('bag', './img/bag.jpg');
-new ImageObjet('banana', './img/banana.jpg');
-new ImageObjet('bathroom', './img/bathroom.jpg');
-new ImageObjet('boots', './img/boots.jpg');
-new ImageObjet('breakfast', './img/breakfast.jpg');
-new ImageObjet('pet-sweep', './img/pet-sweep.jpg');
-new ImageObjet('bubblegum', './img/bubblegum.jpg');
-new ImageObjet('chair', './img/chair.jpg');
-new ImageObjet('cthulhu', './img/cthulhu.jpg');
-new ImageObjet('dog-duck', './img/dog-duck.jpg');
-new ImageObjet('dragon', './img/dragon.jpg');
-new ImageObjet('pet', './img/pen.jpg');
-new ImageObjet('scissors', './img/scissors.jpg');
-new ImageObjet('shark', './img/shark.jpg');
-new ImageObjet('sweep', './img/sweep.png');
-new ImageObjet('tauntaun', './img/tauntaun.jpg');
-new ImageObjet('usb', './img/usb.gif');
-new ImageObjet('water', './img/water-can.jpg');
-new ImageObjet('wine', './img/wine-glass.jpg');
+new ImageObject('bag', './img/bag.jpg');
+new ImageObject('banana', './img/banana.jpg');
+new ImageObject('bathroom', './img/bathroom.jpg');
+new ImageObject('boots', './img/boots.jpg');
+new ImageObject('breakfast', './img/breakfast.jpg');
+new ImageObject('bubblegum', './img/bubblegum.jpg');
+new ImageObject('chair', './img/chair.jpg');
+new ImageObject('cthulhu', './img/cthulhu.jpg');
+new ImageObject('dog-duck', './img/dog-duck.jpg');
+new ImageObject('dragon', './img/dragon.jpg');
+new ImageObject('pen', './img/pen.jpg');
+new ImageObject('pet-sweep', './img/pet-sweep.jpg');
+new ImageObject('scissors', './img/scissors.jpg');
+new ImageObject('shark', './img/shark.jpg');
+new ImageObject('sweep', './img/sweep.png');
+new ImageObject('tauntaun', './img/tauntaun.jpg');
+new ImageObject('unicorn', './img/unicorn.jpg');
+new ImageObject('usb', './img/usb.gif');
+new ImageObject('water', './img/water-can.jpg');
+new ImageObject('wine', './img/wine-glass.jpg');
 
-console.log(ImageObjet.allImages);
+console.log(ImageObject.allImages);
 
-leftImageOnPage = ImageObjet.allImages[5];
-middleImageOnPage = ImageObjet.allImages[17];
-rightImageOnPage = ImageObjet.allImages[0];
+leftImageOnPage = ImageObject.allImages[0];
+middleImageOnPage = ImageObject.allImages[1];
+rightImageOnPage = ImageObject.allImages[2];
 console.log(globalClickCount);
 
 
