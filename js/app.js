@@ -37,7 +37,9 @@ var rightImageTag = document.getElementById('right_img');
 //Count for all image clicks
 var globalClickCount = 0;
 //These Variables will represent the images on the page at the moment
-
+var nameArr = [];
+var percentageArr = [];
+var clicksArr = [];
 var leftImageOnPage;
 var middleImageOnPage;
 var rightImageOnPage;
@@ -48,10 +50,20 @@ var ImageObject = function(name,imageSrc){
   this.url = imageSrc;
   this.clicks = 0;
   this.timeShown = 0;
+  this.percentage = this.clicks / this.timeShown *100;
   ImageObject.allImages.push(this);
 };
 ImageObject.allImages = [];
 ImageObject.previousImages = [];
+
+var dataExtractor = function(){
+  for(var i = 0; i < ImageObject.allImages.length; i++){
+    nameArr.push(ImageObject.allImages[i].name);
+    percentageArr.push(ImageObject.allImages[i].percantage);
+    clicksArr.push(ImageObject.allImages[i].clicks);
+    console.log(nameArr);
+  }
+};
 //This fuction will reneder the images while checking for dups
 var renderImages = function(leftIndex,middleIndex,rightIndex){
   console.log(leftIndex,middleIndex,rightIndex);
@@ -60,19 +72,20 @@ var renderImages = function(leftIndex,middleIndex,rightIndex){
   rightImageTag.src = ImageObject.allImages[rightIndex].url;
   if(ImageObject.previousImages.includes(ImageObject.allImages[leftIndex].name) || ImageObject.previousImages.includes(ImageObject.allImages[middleIndex].name) ||ImageObject.previousImages.includes(ImageObject.allImages[rightIndex].name)){
     console.log('Im here!');
-    leftIndex = Math.floor(Math.random()*ImageObject.allImages.length);
-    middleIndex = Math.floor(Math.random()*ImageObject.allImages.length);
-    rightIndex = Math.floor(Math.random()*ImageObject.allImages.length);
-    renderImages(leftIndex,middleIndex,rightIndex);
+    renderAgain(leftIndex,middleIndex,rightIndex);
   }
   if(leftIndex === middleIndex || leftIndex === rightIndex || middleIndex === rightIndex){
-    leftIndex = Math.floor(Math.random()*ImageObject.allImages.length);
-    middleIndex = Math.floor(Math.random()*ImageObject.allImages.length);
-    rightIndex = Math.floor(Math.random()*ImageObject.allImages.length);
-    renderImages(leftIndex,middleIndex,rightIndex);
+    renderAgain(leftIndex,middleIndex,rightIndex);
   }
   ImageObject.previousImages = [];
   ImageObject.previousImages.push(ImageObject.allImages[leftIndex].name,ImageObject.allImages[middleIndex].name,ImageObject.allImages[rightIndex].name);
+};
+
+var renderAgain = function(leftIndex,middleIndex,rightIndex){
+  leftIndex = Math.floor(Math.random()*ImageObject.allImages.length);
+  middleIndex = Math.floor(Math.random()*ImageObject.allImages.length);
+  rightIndex = Math.floor(Math.random()*ImageObject.allImages.length);
+  renderImages(leftIndex,middleIndex,rightIndex);
 };
 
 var clickNewImages = function(){
@@ -122,16 +135,16 @@ var handleClickOnImages = function(event){
   console.log(globalClickCount);
   if(globalClickCount === 25){
     allImageTag.removeEventListener('click', handleClickOnImages);
+    dataExtractor();
+    buildChart();
   }
 };
 
 var calculation = function(leftImageOnPage,middleImageOnPage,rightImageOnPage){
   ImageObject.previousImages.push(leftImageCalculation,middleImageOnPage,rightImageOnPage);
-
   var leftImageCalculation = leftImageOnPage.clicks / leftImageOnPage.timeShown;
   var middleImageCalcuation = middleImageOnPage.clicks / middleImageOnPage.timeShown;
   var rightImageCalcualtion = rightImageOnPage.clicks / rightImageOnPage.timeShown;
-
   console.log(leftImageCalculation);
   console.log(rightImageCalcualtion);
   console.log(middleImageCalcuation);
@@ -141,6 +154,46 @@ var calculation = function(leftImageOnPage,middleImageOnPage,rightImageOnPage){
 
 
 
+
+var buildChart = function(){
+  var ctx = document.getElementById('myChart').getContext('2d');
+  var myChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: nameArr,
+      datasets: [{
+        label: '# of Votes',
+        data: [12, 19, 3, 5, 2, 3],
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)'
+        ],
+        borderColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)'
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      }
+    }
+  });
+};
 allImageTag.addEventListener('click', handleClickOnImages);
 
 new ImageObject('bag', './img/bag.jpg');
