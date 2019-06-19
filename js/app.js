@@ -63,13 +63,14 @@ var dataExtractor = function(){
     percentageArr.push(ImageObject.allImages[i].percentage);
     clicksArr.push(ImageObject.allImages[i].clicks);
     timeShownArr.push(ImageObject.allImages[i].timeShown);
-    console.log(percentageArr);
+    if(ImageObject.allImages[i].percentage === isNaN){
+      ImageObject.allImages[i].percentage = 0 + '%';
+    }
   }
 };
 
 //This fuction will reneder the images while checking for dups
 var renderImages = function(leftIndex,middleIndex,rightIndex){
-  console.log(leftIndex,middleIndex,rightIndex);
   leftImageTag.src = ImageObject.allImages[leftIndex].url;
   middleImageTag.src = ImageObject.allImages[middleIndex].url;
   rightImageTag.src = ImageObject.allImages[rightIndex].url;
@@ -139,6 +140,7 @@ var handleClickOnImages = function(event){
   if(globalClickCount === 25){
     allImageTag.removeEventListener('click', handleClickOnImages);
     dataExtractor();
+    randomColor = random_bg_color();
     buildChart();
   }
 };
@@ -147,16 +149,13 @@ var calculation = function(leftImageOnPage,middleImageOnPage,rightImageOnPage){
   leftImageOnPage.percentage = leftImageOnPage.clicks / leftImageOnPage.timeShown + '%';
   middleImageOnPage.percentage = middleImageOnPage.clicks / middleImageOnPage.timeShown + '%';
   leftImageOnPage.percentage = rightImageOnPage.clicks / rightImageOnPage.timeShown+ '%';
-  console.log(leftImageOnPage.percentage);
-  console.log(middleImageOnPage.percentage);
-  console.log(rightImageOnPage.percentage);
 };
 
 
 function random_bg_color() {
   var colorArr = [];
   var borderColorArr = [];
-  for(var i = 0; i < ImageObject.allImages.length;){
+  for(var i = 0; i < ImageObject.allImages.length;i++){
     var r = Math.floor(Math.random() * 256);
     var g = Math.floor(Math.random() * 256);
     var b = Math.floor(Math.random() * 256);
@@ -165,8 +164,9 @@ function random_bg_color() {
     colorArr.push(bgColor);
     borderColorArr.push(borderColor);
   }
+  console.log(colorArr);
+  return[colorArr,borderColorArr];
 
-  return[colorArr,borderColor];
 }
 randomColor = random_bg_color();
 
@@ -178,59 +178,11 @@ var buildChart = function(){
     data: {
       labels: nameArr,
       datasets: [{
-        label: '# of Votes',
+        label: '% of Votes',
         data: clicksArr,
         percentage:percentageArr,
-        backgroundColor: [
-          'rgba(255, 99, 132, 0.2)',
-          'rgba(54, 162, 235, 0.2)',
-          'rgba(255, 206, 86, 0.2)',
-          'rgba(75, 192, 192, 0.2)',
-          'rgba(153, 222, 255, 0.2)',
-          'rgba(153, 112, 255, 0.2)',
-          'rgba(153, 162, 255, 0.2)',
-          'rgba(153, 182, 255, 0.2)',
-          'rgba(153, 202, 255, 0.2)',
-          'rgba(153, 02, 255, 0.2)',
-          'rgba(153, 10, 255, 0.2)',
-          'rgba(153, 252, 255, 0.2)',
-          'rgba(153, 192, 255, 0.2)',
-          'rgba(153, 122, 255, 0.2)',
-          'rgba(153, 132, 255, 0.2)',
-          'rgba(153, 142, 255, 0.2)',
-          'rgba(153, 152, 255, 0.2)',
-          'rgba(153, 232, 255, 0.2)',
-          'rgba(153, 242, 255, 0.2)',
-          'rgba(255, 19, 64, 0.2)'
-        ],
-        borderColor: [
-          'rgba(255, 99, 132, 1)',
-          'rgba(54, 162, 235, 1)',
-          'rgba(255, 206, 86, 1)',
-          'rgba(75, 192, 192, 1)',
-          'rgba(75,200, 192, 1)',
-          'rgba(75, 100, 192, 1)',
-          'rgba(75, 210, 192, 1)',
-          'rgba(75, 110, 192, 1)',
-          'rgba(75, 220, 192, 1)',
-          'rgba(75, 120, 192, 1)',
-          'rgba(75, 230, 192, 1)',
-          'rgba(75, 130, 192, 1)',
-          'rgba(75, 240, 192, 1)',
-          'rgba(75, 140, 192, 1)',
-          'rgba(75, 250, 192, 1)',
-          'rgba(75, 150, 192, 1)',
-          'rgba(75, 205, 192, 1)',
-          'rgba(75, 105, 192, 1)',
-          'rgba(75, 215, 192, 1)',
-          'rgba(75, 115, 192, 1)',
-          'rgba(75, 225, 192, 1)',
-          'rgba(75, 125, 192, 1)',
-          'rgba(75, 235, 192, 1)',
-          'rgba(75, 135, 192, 1)',
-          'rgba(153, 102, 255, 1)',
-          'rgba(255, 159, 64, 1)'
-        ],
+        backgroundColor: randomColor[0],
+        borderColor:randomColor[1],
         borderWidth: 1
       }]
     },
