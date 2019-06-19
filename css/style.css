@@ -78,9 +78,14 @@ img{
 }
 #image-clicks{
   display: inline-block;
-  margin-left: 10px;
+  width: 300px;
+  height: 400px;
 }
 
 #images{
-  margin-left: 200px;
+  margin-left: 400px;
+}
+
+#all_images h1{
+  margin-left: 400px;
 }

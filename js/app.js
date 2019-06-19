@@ -40,17 +40,18 @@ var globalClickCount = 0;
 var nameArr = [];
 var percentageArr = [];
 var clicksArr = [];
+var timeShownArr = [];
 var leftImageOnPage;
 var middleImageOnPage;
 var rightImageOnPage;
-
+var randomColor;
 //This is where the image object constructor will be
 var ImageObject = function(name,imageSrc){
   this.name = name;
   this.url = imageSrc;
   this.clicks = 0;
   this.timeShown = 0;
-  this.percentage = this.clicks / this.timeShown *100;
+  this.percentage = 0;
   ImageObject.allImages.push(this);
 };
 ImageObject.allImages = [];
@@ -59,11 +60,13 @@ ImageObject.previousImages = [];
 var dataExtractor = function(){
   for(var i = 0; i < ImageObject.allImages.length; i++){
     nameArr.push(ImageObject.allImages[i].name);
-    percentageArr.push(ImageObject.allImages[i].percantage);
+    percentageArr.push(ImageObject.allImages[i].percentage);
     clicksArr.push(ImageObject.allImages[i].clicks);
-    console.log(nameArr);
+    timeShownArr.push(ImageObject.allImages[i].timeShown);
+    console.log(percentageArr);
   }
 };
+
 //This fuction will reneder the images while checking for dups
 var renderImages = function(leftIndex,middleIndex,rightIndex){
   console.log(leftIndex,middleIndex,rightIndex);
@@ -141,18 +144,31 @@ var handleClickOnImages = function(event){
 };
 
 var calculation = function(leftImageOnPage,middleImageOnPage,rightImageOnPage){
-  ImageObject.previousImages.push(leftImageCalculation,middleImageOnPage,rightImageOnPage);
-  var leftImageCalculation = leftImageOnPage.clicks / leftImageOnPage.timeShown;
-  var middleImageCalcuation = middleImageOnPage.clicks / middleImageOnPage.timeShown;
-  var rightImageCalcualtion = rightImageOnPage.clicks / rightImageOnPage.timeShown;
-  console.log(leftImageCalculation);
-  console.log(rightImageCalcualtion);
-  console.log(middleImageCalcuation);
-
-  return[leftImageCalculation,middleImageCalcuation,rightImageCalcualtion];
+  leftImageOnPage.percentage = leftImageOnPage.clicks / leftImageOnPage.timeShown + '%';
+  middleImageOnPage.percentage = middleImageOnPage.clicks / middleImageOnPage.timeShown + '%';
+  leftImageOnPage.percentage = rightImageOnPage.clicks / rightImageOnPage.timeShown+ '%';
+  console.log(leftImageOnPage.percentage);
+  console.log(middleImageOnPage.percentage);
+  console.log(rightImageOnPage.percentage);
 };
 
 
+function random_bg_color() {
+  var colorArr = [];
+  var borderColorArr = [];
+  for(var i = 0; i < ImageObject.allImages.length;){
+    var r = Math.floor(Math.random() * 256);
+    var g = Math.floor(Math.random() * 256);
+    var b = Math.floor(Math.random() * 256);
+    var bgColor = 'rgba(' + r + ',' + g + ',' + b +',' +0.2 + ')';
+    var borderColor = 'rgba(' + r + ',' + g + ',' + b +',' +1 +')';
+    colorArr.push(bgColor);
+    borderColorArr.push(borderColor);
+  }
+
+  return[colorArr,borderColor];
+}
+randomColor = random_bg_color();
 
 
 var buildChart = function(){
@@ -163,20 +179,55 @@ var buildChart = function(){
       labels: nameArr,
       datasets: [{
         label: '# of Votes',
-        data: [12, 19, 3, 5, 2, 3],
+        data: clicksArr,
+        percentage:percentageArr,
         backgroundColor: [
           'rgba(255, 99, 132, 0.2)',
           'rgba(54, 162, 235, 0.2)',
           'rgba(255, 206, 86, 0.2)',
           'rgba(75, 192, 192, 0.2)',
-          'rgba(153, 102, 255, 0.2)',
-          'rgba(255, 159, 64, 0.2)'
+          'rgba(153, 222, 255, 0.2)',
+          'rgba(153, 112, 255, 0.2)',
+          'rgba(153, 162, 255, 0.2)',
+          'rgba(153, 182, 255, 0.2)',
+          'rgba(153, 202, 255, 0.2)',
+          'rgba(153, 02, 255, 0.2)',
+          'rgba(153, 10, 255, 0.2)',
+          'rgba(153, 252, 255, 0.2)',
+          'rgba(153, 192, 255, 0.2)',
+          'rgba(153, 122, 255, 0.2)',
+          'rgba(153, 132, 255, 0.2)',
+          'rgba(153, 142, 255, 0.2)',
+          'rgba(153, 152, 255, 0.2)',
+          'rgba(153, 232, 255, 0.2)',
+          'rgba(153, 242, 255, 0.2)',
+          'rgba(255, 19, 64, 0.2)'
         ],
         borderColor: [
           'rgba(255, 99, 132, 1)',
           'rgba(54, 162, 235, 1)',
           'rgba(255, 206, 86, 1)',
           'rgba(75, 192, 192, 1)',
+          'rgba(75,200, 192, 1)',
+          'rgba(75, 100, 192, 1)',
+          'rgba(75, 210, 192, 1)',
+          'rgba(75, 110, 192, 1)',
+          'rgba(75, 220, 192, 1)',
+          'rgba(75, 120, 192, 1)',
+          'rgba(75, 230, 192, 1)',
+          'rgba(75, 130, 192, 1)',
+          'rgba(75, 240, 192, 1)',
+          'rgba(75, 140, 192, 1)',
+          'rgba(75, 250, 192, 1)',
+          'rgba(75, 150, 192, 1)',
+          'rgba(75, 205, 192, 1)',
+          'rgba(75, 105, 192, 1)',
+          'rgba(75, 215, 192, 1)',
+          'rgba(75, 115, 192, 1)',
+          'rgba(75, 225, 192, 1)',
+          'rgba(75, 125, 192, 1)',
+          'rgba(75, 235, 192, 1)',
+          'rgba(75, 135, 192, 1)',
           'rgba(153, 102, 255, 1)',
           'rgba(255, 159, 64, 1)'
         ],
